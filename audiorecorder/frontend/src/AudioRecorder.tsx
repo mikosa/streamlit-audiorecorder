@@ -3,8 +3,10 @@ import {
   Streamlit,
   withStreamlitConnection,
 } from "streamlit-component-lib"
+import { storage } from "./firebaseConfig";
+import { ref, uploadBytes } from "firebase/storage";
 import { AudioRecorder as AudioRecorderVisualiser, useAudioRecorder } from '@theevann/react-audio-voice-recorder';
-
+import { v4 as uuidv4 } from "uuid";
 
 function BlobToDataURL(blob: Blob): Promise<string>{
   debugger;
@@ -15,6 +17,12 @@ function BlobToDataURL(blob: Blob): Promise<string>{
   });
 }
 
+async function getUserIP(): Promise<string> {
+  const response = await fetch('https://api.ipify.org?format=json');
+  const data = await response.json();
+  return data.ip;
+}
+
 function AudioRecorder(props: any) {
   const [isHoveredStart, setIsHoveredStart] = useState(false);
   const [isHoveredStop, setIsHoveredStop] = useState(false);
@@ -23,9 +31,22 @@ function AudioRecorder(props: any) {
 
   const useAudioRecorderVisualiser = props.args.start_prompt === "" && props.args.stop_prompt === "";
 
-  const onRecordingComplete = async (blob: Blob) => {
-    const audioDataStr = (await BlobToDataURL(blob)).replace(/^data:.+?base64,/, "");
-    Streamlit.setComponentValue(audioDataStr);
+  const onRecordingComplete = async (audioBlob: Blob) => {
+    // const audioDataStr = (await BlobToDataURL(blob)).replace(/^data:.+?base64,/, "");
+    // Streamlit.setComponentValue(audioDataStr);
+    const userIP = await getUserIP();
+    const storageRef = ref(storage, `audio/${userIP}_${uuidv4()}.wav`);
+
+    try {
+      // Upload the audio file to Firebase Storage
+      await uploadBytes(storageRef, audioBlob);
+      console.log("Uploaded a blob or file!");
+
+      // Notify Streamlit that the recording is complete
+      Streamlit.setComponentValue("Recording complete and uploaded to Firebase Storage");
+    } catch (error) {
+      console.error("Error uploading file to Firebase Storage:", error);
+    }
   };
 
   useEffect(() => {
