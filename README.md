@@ -1,3 +1,9 @@
+
+cd audiorecorder/frontend
+npm run build
+then 
+streamlit run --server.enableCORS false --server.enableXsrfProtection false  /workspaces/streamlit-audiorecorder/audiorecorder/__init__.py
+
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://audio-recorder.streamlit.app)
 # streamlit-audiorecorder
 

@@ -6,9 +6,11 @@
     "@theevann/react-audio-voice-recorder": "2.2.2",
     "@types/dom-mediacapture-record": "^1.0.11",
     "@types/jest": "^24.0.0",
+    "firebase": "^10.13.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "streamlit-component-lib": "^2.0.0"
+    "streamlit-component-lib": "^2.0.0",
+    "uuid": "^10.0.0"
   },
   "resolutions": {
     "@types/react": "17.0.14",
@@ -41,6 +43,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "17.0.14",
     "@types/react-dom": "17.0.14",
+    "@types/uuid": "^10.0.0",
     "react-scripts": "^5.0.1",
     "typescript": "^4.2.0"
   }
